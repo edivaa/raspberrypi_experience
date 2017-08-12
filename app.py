@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import RPi.GPIO as GPIO ## Import GPIO library
 import Adafruit_DHT
 import time ## Import 'time' library. Allows us to use 'sleep'
@@ -67,8 +67,18 @@ def controle(comando):
         return 'Led amarelo desligado'
 
 
-@app.route('/temp/<int:grau>')
-def temp(grau):
+@app.route('/ligar/')
+def ligar():
+    GPIO.output(15,GPIO.LOW)## Switch off pin 15
+    return jsonify({'ventilador': 'on'})
+
+@app.route('/desligar/')
+def desligar():
+    GPIO.output(15,GPIO.HIGH)## Switch off pin 15
+    return jsonify({'ventilador': 'off'})
+
+@app.route('/temp/')
+def temp():
     # Define o tipo de sensor
     sensor = Adafruit_DHT.DHT11
     #sensor = Adafruit_DHT.DHT22
@@ -90,16 +100,9 @@ def temp(grau):
         print ("Temperatura = {0:0.1f}  Umidade = {1:0.1f}").format(temp, umid);
         #return 'Sensor de temperatura ligado temperatura %s  Umidade %s ' %temp, umid
         print ("Aguarda 5 segundos para efetuar nova leitura...");
-
-        if int(temp) >= grau:
-            GPIO.output(15,GPIO.LOW)## Switch off pin 15
-        else:  GPIO.output(15,GPIO.HIGH)## Switch off pin 15
-
-        if grau == 1:
-            GPIO.output(15,GPIO.HIGH)## Switch off pin 15
         # time.sleep(5)
         timestamp = str(datetime.now())
-        return json.dumps({'umidade': umid, 'temperatura': temp, 'timestamp': timestamp})
+        return jsonify({'umidade': umid, 'temperatura': temp, 'timestamp': timestamp})
     else:
         # Mensagem de erro de comunicacao com o sensor
-        return json.dumps({'Falha ao ler dados do DHT11 !!!'})
+        return jsonify({'Falha ao ler dados do DHT11 !!!'})

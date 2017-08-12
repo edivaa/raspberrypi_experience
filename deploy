@@ -1,3 +1,3 @@
 #!/bin/bash
-sshpass -p raspberry ssh pi@192.168.2.103 "cd /home/pi/workspace/app/; git pull origin master"
+sshpass -p raspberry ssh pi@192.168.2.103 "cd /home/pi/Documents/projetos/raspcpba-master_temp; git pull origin master"
 # sshpass -p raspberry ssh pi@192.168.2.103 "cd /home/pi/workspace/app/; echo 'raspberry' | sudo pip install -r requirements.txt; ./run"

@@ -101,7 +101,8 @@ def temp(grau):
         if grau == 1:
             GPIO.output(15,GPIO.HIGH)## Switch off pin 15
         # time.sleep(5)
-        return json.dumps({'umidade': umid, 'temperatura': temp, 'timestamp': datetime.now()})
+        timestamp = str(datetime.now())
+        return json.dumps({'umidade': umid, 'temperatura': temp, 'timestamp': timestamp})
     else:
         # Mensagem de erro de comunicacao com o sensor
         return json.dumps({'Falha ao ler dados do DHT11 !!!'})

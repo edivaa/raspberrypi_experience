@@ -15,6 +15,8 @@ def hello():
 
 @app.route('/blink/<int:speed>')
 def blink(speed):
+
+  
     GPIO.setmode(GPIO.BOARD) ## Use board pin numbering
     GPIO.setwarnings(False)
     GPIO.setup(7,GPIO.OUT) ## Setup GPIO Pin 7 to OUT
@@ -32,6 +34,7 @@ def blink(speed):
     time.sleep(speed)## Wait
     GPIO.output(13,GPIO.LOW)## Switch off pin 7
     GPIO.cleanup()
+   
     return 'Led foi acionado durante %s segundos'%speed
 
 @app.route('/controle/<string:comando>')

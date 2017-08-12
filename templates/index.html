@@ -21,21 +21,32 @@
   </head>
   <body>
     <h1>Hello, Temperatura</h1>
+    
     <div>temp: <h4 id="temp"></h4></div>
     <div>umd: <h4 id="umd"></h4></div>
-
+    <label id="status"></label><br>
+    <label>SetPont temperatura</label><input name="temp_val" id="temp_val"/>  
+    <!--input type="button" value="Enviar"/-->
+    
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script>
       function getTemperatura(){
+
         $.ajax({
           url: '/temp',
           success: function(data){
             console.log(data);
+            var tempTela=parseFloat( $('#temp_val').val());
             var temp = data['temperatura'];
             var umd = data['umidade'];
+            console.log(temp, tempTela, (temp>tempTela));
+            if(temp>tempTela){
+              if($("#status").val()=="Desligado")
+                  ventiladorOn();
+            }else{  if($("#status").val()=="Ligado") ventiladorOff();}
 
             document.querySelector("#temp").innerHTML = temp;
             document.querySelector("#umd").innerHTML = umd;
@@ -44,7 +55,41 @@
             console.log(xhr);
           }
         });
+    }
+
+    function ventiladorOn(){
+
+        $.ajax({
+          url: '/ligar/',
+          success: function(data){
+            console.log(data);
+
+            document.querySelector("#status").innerHTML = "Ligado";            
+          },
+          error: function(xhr){
+            console.log(xhr);
+          }
+        });
+
       }
+
+      function ventiladorOff(){
+
+        $.ajax({
+          url: '/desligar/',
+          success: function(data){
+            console.log(data);
+
+            document.querySelector("#status").innerHTML = "Desligado";            
+          },
+          error: function(xhr){
+            console.log(xhr);
+          }
+        });
+
+      }
+
+
 
       setInterval(function(){ getTemperatura() }, 3000);
     </script>

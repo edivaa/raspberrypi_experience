@@ -3,6 +3,7 @@ import RPi.GPIO as GPIO ## Import GPIO library
 import Adafruit_DHT
 import time ## Import 'time' library. Allows us to use 'sleep'
 import json
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -97,7 +98,7 @@ def temp(grau):
         if grau == 1:
             GPIO.output(15,GPIO.HIGH)## Switch off pin 15
         # time.sleep(5)
-        return json.dumps({'umidade': umid, 'temperatura': temp})
+        return json.dumps({'umidade': umid, 'temperatura': temp, 'timestamp': datetime.now()})
     else:
         # Mensagem de erro de comunicacao com o sensor
         return json.dumps({'Falha ao ler dados do DHT11 !!!'})

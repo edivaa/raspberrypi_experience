@@ -1,0 +1,3 @@
+#!/bin/bash
+sshpass -p raspberry scp -r ./* pi@192.168.2.100:/home/pi/workspace/app/
+sshpass -p raspberry ssh pi@192.168.2.100 "cd /home/pi/workspace/app/; echo 'raspberry' | sudo pip install -r requirements.txt; ./run"

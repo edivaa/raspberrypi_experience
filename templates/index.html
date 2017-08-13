@@ -24,7 +24,7 @@
     
     <div>temp: <h4 id="temp"></h4></div>
     <div>umd: <h4 id="umd"></h4></div>
-    <label id="status"></label><br>
+    <label id="status">Desligado</label><br>
     <label>SetPont temperatura</label><input name="temp_val" id="temp_val"/>  
     <!--input type="button" value="Enviar"/-->
     
@@ -42,11 +42,14 @@
             var tempTela=parseFloat( $('#temp_val').val());
             var temp = data['temperatura'];
             var umd = data['umidade'];
-            console.log(temp, tempTela, (temp>tempTela));
+            var status =$("#status").val();
+            console.log(temp, tempTela, (temp>tempTela),status );
+
             if(temp>tempTela){
-              if($("#status").val()=="Desligado")
+              //if(status=="Desligado" || $("#status").val()=="" )
                   ventiladorOn();
-            }else{  if($("#status").val()=="Ligado") ventiladorOff();}
+            }else{  //if(status=="Ligado") 
+                 ventiladorOff();}
 
             document.querySelector("#temp").innerHTML = temp;
             document.querySelector("#umd").innerHTML = umd;

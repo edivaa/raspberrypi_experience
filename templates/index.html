@@ -66,7 +66,8 @@
           url: '/ligar/',
           success: function(data){
             console.log(data);
-
+            ledOnOff("vermelho_ligar");
+            ledOnOff("verde_desligar");
             document.querySelector("#status").innerHTML = "Ligado";            
           },
           error: function(xhr){
@@ -82,8 +83,25 @@
           url: '/desligar/',
           success: function(data){
             console.log(data);
-
+            ledOnOff("vermelho_desligar");
+            ledOnOff("verde_ligar");
             document.querySelector("#status").innerHTML = "Desligado";            
+          },
+          error: function(xhr){
+            console.log(xhr);
+          }
+        });
+
+      }
+
+      function ledOnOff(param){
+
+        $.ajax({
+          url: '/controle/'+param,
+          success: function(data){
+            console.log(data);
+
+            //document.querySelector("#status").innerHTML = "Desligado";            
           },
           error: function(xhr){
             console.log(xhr);

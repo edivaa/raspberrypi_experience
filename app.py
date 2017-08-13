@@ -45,26 +45,26 @@ def controle(comando):
      GPIO.setup(11,GPIO.OUT) ## Setup GPIO Pin 11 to OUT
      GPIO.setup(13,GPIO.OUT) ## Setup GPIO Pin 13 to OUT
 
-     if comando == "ligaver":
+     if comando == "vermelho_ligar":
         GPIO.output(7,GPIO.HIGH) ## Setup GPIO Pin 7 to OUT
-        return 'Led vermelho ligado'
-     if comando == "deslver" :
+        return jsonify({'Led vermelho': 'on'})
+     if comando == "vermelho_desligar" :
         GPIO.output(7,GPIO.LOW)## Switch off pin 7
-        return 'Led vermelho desligado'
+        return jsonify({'Led vermelho': 'off'})
 
-     if comando == "ligaamar":
-        GPIO.output(11,GPIO.HIGH) ## Setup GPIO Pin 7 to OUT
-        return 'Led amarelo ligado'
-     if comando == "deslamar" :
-        GPIO.output(11,GPIO.LOW)## Switch off pin 7
-        return 'Led amarelo desligado'
+     if comando == "amarelo_ligar":
+        GPIO.output(11,GPIO.HIGH) ## Setup GPIO Pin 11 to OUT
+        return jsonify({'Led amarelo': 'on'})
+     if comando == "amarelo_desliga" :
+        GPIO.output(11,GPIO.LOW)## Switch off pin 11
+        return jsonify({'Led amarelo': 'off'})
 
-     if comando == "ligaverd":
-        GPIO.output(13,GPIO.HIGH) ## Setup GPIO Pin 7 to OUT
-        return 'Led verde ligado'
-     if comando == "deslverd" :
-        GPIO.output(13,GPIO.LOW)## Switch off pin 7
-        return 'Led amarelo desligado'
+     if comando == "verde_ligar":
+        GPIO.output(13,GPIO.HIGH) ## Setup GPIO Pin 13 to OUT
+        return jsonify({'Led verde': 'on'})
+     if comando == "verde_desligar" :
+        GPIO.output(13,GPIO.LOW)## Switch off pin 13
+        return jsonify({'Led verde': 'off'})
 
 
 @app.route('/ligar/')

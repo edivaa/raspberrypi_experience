@@ -48,9 +48,15 @@
             if(temp>tempTela){
               //if(status=="Desligado" || $("#status").val()=="" )
                   ventiladorOn();
+            }else if(temp==25.0){  
+              
+                ledOnOff(""amarelo_ligar")
+            
             }else{  //if(status=="Ligado") 
-                 ventiladorOff();}
-
+                 ventiladorOff();
+            }
+              if(temp==25.0)  ledOnOff(""amarelo_ligar");
+            
             document.querySelector("#temp").innerHTML = temp;
             document.querySelector("#umd").innerHTML = umd;
           },
@@ -68,6 +74,7 @@
             console.log(data);
             ledOnOff("vermelho_ligar");
             ledOnOff("verde_desligar");
+            ledOnOff("amarelo_desligar");
             document.querySelector("#status").innerHTML = "Ligado";            
           },
           error: function(xhr){
@@ -85,6 +92,7 @@
             console.log(data);
             ledOnOff("vermelho_desligar");
             ledOnOff("verde_ligar");
+            ledOnOff("amarelo_desligar");
             document.querySelector("#status").innerHTML = "Desligado";            
           },
           error: function(xhr){

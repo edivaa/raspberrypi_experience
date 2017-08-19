@@ -55,7 +55,7 @@ def controle(comando):
      if comando == "amarelo_ligar":
         GPIO.output(11,GPIO.HIGH) ## Setup GPIO Pin 11 to OUT
         return jsonify({'Led amarelo': 'on'})
-     if comando == "amarelo_desliga" :
+     if comando == "amarelo_desligar" :
         GPIO.output(11,GPIO.LOW)## Switch off pin 11
         return jsonify({'Led amarelo': 'off'})
 

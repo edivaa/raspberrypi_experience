@@ -25,7 +25,8 @@
     <div><label>temp:</label><h4 id="temp"></h4></div>
     <div><label> umd:</label> <h4 id="umd"></h4></div>
     <div><label id="status">Desligado</label><br>
-    <label>SetPoint temperatura</label><input name="temp_val" id="temp_val"/>  
+    <label>SetPoint Alta</label><input name="temp_val" id="temp_val"/> 
+    <label>SetPoint Média</label><input name="temp_media" id="temp_media"/>   
     <!--input type="button" value="Enviar"/-->
     
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -40,6 +41,7 @@
           success: function(data){
             console.log(data);
             var tempTela=parseFloat( $('#temp_val').val());
+            var tempMedia = parseFloat($('#temp_media').val());
             var temp = data['temperatura'];
             var umd = data['umidade'];
             var status =$("#status").val();
@@ -48,14 +50,14 @@
             if(temp>tempTela){
               //if(status=="Desligado" || $("#status").val()=="" )
                   ventiladorOn();
-            }else if(temp==25.0){  
+            }else if(temp==tempMedia){  
               
-                ledOnOff("amarelo_ligar")
+                ledOnOff("amarelo_ligar");
             
             }else{  //if(status=="Ligado") 
                  ventiladorOff();
             }
-              if(temp==25.0)  ledOnOff("amarelo_ligar");
+          
             
             document.querySelector("#temp").innerHTML = temp;
             document.querySelector("#umd").innerHTML = umd;

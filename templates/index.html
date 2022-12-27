@@ -20,11 +20,109 @@
     <![endif]-->
   </head>
   <body>
-    <h1>Hello, world!</h1>
-
+    <h1>Hello, Temperatura</h1>
+    
+    <div><label>temp:</label><h4 id="temp"></h4></div>
+    <div><label> umd:</label> <h4 id="umd"></h4></div>
+    <div><label id="status">Desligado</label><br>
+    <label>SetPoint Alta</label><input name="temp_val" id="temp_val"/> 
+    <label>SetPoint Média</label><input name="temp_media" id="temp_media"/>   
+    <!--input type="button" value="Enviar"/-->
+    
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script>
+      function getTemperatura(){
+
+        $.ajax({
+          url: '/temp',
+          success: function(data){
+            console.log(data);
+            var tempTela=parseFloat( $('#temp_val').val());
+            var tempMedia = parseFloat($('#temp_media').val());
+            var temp = data['temperatura'];
+            var umd = data['umidade'];
+            var status =$("#status").val();
+            console.log(temp, tempTela, (temp>tempTela),status );
+
+            if(temp>tempTela){
+              //if(status=="Desligado" || $("#status").val()=="" )
+                  ventiladorOn();
+            }else if(temp==tempMedia){  
+              
+                ledOnOff("amarelo_ligar");
+            
+            }else{  //if(status=="Ligado") 
+                 ventiladorOff();
+            }
+          
+            
+            document.querySelector("#temp").innerHTML = temp;
+            document.querySelector("#umd").innerHTML = umd;
+          },
+          error: function(xhr){
+            console.log(xhr);
+          }
+        });
+    }
+
+    function ventiladorOn(){
+
+        $.ajax({
+          url: '/ligar/',
+          success: function(data){
+            console.log(data);
+            ledOnOff("vermelho_ligar");
+            ledOnOff("verde_desligar");
+            ledOnOff("amarelo_desligar");
+            document.querySelector("#status").innerHTML = "Ligado";            
+          },
+          error: function(xhr){
+            console.log(xhr);
+          }
+        });
+
+      }
+
+      function ventiladorOff(){
+
+        $.ajax({
+          url: '/desligar/',
+          success: function(data){
+            console.log(data);
+            ledOnOff("vermelho_desligar");
+            ledOnOff("verde_ligar");
+            ledOnOff("amarelo_desligar");
+            document.querySelector("#status").innerHTML = "Desligado";            
+          },
+          error: function(xhr){
+            console.log(xhr);
+          }
+        });
+
+      }
+
+      function ledOnOff(param){
+
+        $.ajax({
+          url: '/controle/'+param,
+          success: function(data){
+            console.log(data);
+
+            //document.querySelector("#status").innerHTML = "Desligado";            
+          },
+          error: function(xhr){
+            console.log(xhr);
+          }
+        });
+
+      }
+
+
+
+      setInterval(function(){ getTemperatura() }, 3000);
+    </script>
   </body>
 </html>

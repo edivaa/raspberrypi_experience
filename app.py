@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import RPi.GPIO as GPIO ## Import GPIO library
 import Adafruit_DHT
 import time ## Import 'time' library. Allows us to use 'sleep'
@@ -17,8 +17,6 @@ def hello():
 
 @app.route('/blink/<int:speed>')
 def blink(speed):
-
-  
     GPIO.setmode(GPIO.BOARD) ## Use board pin numbering
     GPIO.setwarnings(False)
     GPIO.setup(7,GPIO.OUT) ## Setup GPIO Pin 7 to OUT
@@ -36,7 +34,6 @@ def blink(speed):
     time.sleep(speed)## Wait
     GPIO.output(13,GPIO.LOW)## Switch off pin 7
     GPIO.cleanup()
-   
     return 'Led foi acionado durante %s segundos'%speed
 
 @app.route('/controle/<string:comando>')
@@ -48,30 +45,40 @@ def controle(comando):
      GPIO.setup(11,GPIO.OUT) ## Setup GPIO Pin 11 to OUT
      GPIO.setup(13,GPIO.OUT) ## Setup GPIO Pin 13 to OUT
 
-     if comando == "ligaver":
+     if comando == "vermelho_ligar":
         GPIO.output(7,GPIO.HIGH) ## Setup GPIO Pin 7 to OUT
-        return 'Led vermelho ligado'
-     if comando == "deslver" :
+        return jsonify({'Led vermelho': 'on'})
+     if comando == "vermelho_desligar" :
         GPIO.output(7,GPIO.LOW)## Switch off pin 7
-        return 'Led vermelho desligado'
+        return jsonify({'Led vermelho': 'off'})
 
-     if comando == "ligaamar":
-        GPIO.output(11,GPIO.HIGH) ## Setup GPIO Pin 7 to OUT
-        return 'Led amarelo ligado'
-     if comando == "deslamar" :
-        GPIO.output(11,GPIO.LOW)## Switch off pin 7
-        return 'Led amarelo desligado'
+     if comando == "amarelo_ligar":
+        GPIO.output(11,GPIO.HIGH) ## Setup GPIO Pin 11 to OUT
+        return jsonify({'Led amarelo': 'on'})
+     if comando == "amarelo_desligar" :
+        GPIO.output(11,GPIO.LOW)## Switch off pin 11
+        return jsonify({'Led amarelo': 'off'})
 
-     if comando == "ligaverd":
-        GPIO.output(13,GPIO.HIGH) ## Setup GPIO Pin 7 to OUT
-        return 'Led verde ligado'
-     if comando == "deslverd" :
-        GPIO.output(13,GPIO.LOW)## Switch off pin 7
-        return 'Led amarelo desligado'
+     if comando == "verde_ligar":
+        GPIO.output(13,GPIO.HIGH) ## Setup GPIO Pin 13 to OUT
+        return jsonify({'Led verde': 'on'})
+     if comando == "verde_desligar" :
+        GPIO.output(13,GPIO.LOW)## Switch off pin 13
+        return jsonify({'Led verde': 'off'})
 
 
-@app.route('/temp/<int:grau>')
-def temp(grau):
+@app.route('/ligar/')
+def ligar():
+    GPIO.output(15,GPIO.LOW)## Switch off pin 15
+    return jsonify({'ventilador': 'on'})
+
+@app.route('/desligar/')
+def desligar():
+    GPIO.output(15,GPIO.HIGH)## Switch off pin 15
+    return jsonify({'ventilador': 'off'})
+
+@app.route('/temp/')
+def temp():
     # Define o tipo de sensor
     sensor = Adafruit_DHT.DHT11
     #sensor = Adafruit_DHT.DHT22
@@ -93,16 +100,9 @@ def temp(grau):
         print ("Temperatura = {0:0.1f}  Umidade = {1:0.1f}").format(temp, umid);
         #return 'Sensor de temperatura ligado temperatura %s  Umidade %s ' %temp, umid
         print ("Aguarda 5 segundos para efetuar nova leitura...");
-
-        if int(temp) >= grau:
-            GPIO.output(15,GPIO.LOW)## Switch off pin 15
-        else:  GPIO.output(15,GPIO.HIGH)## Switch off pin 15
-
-        if grau == 1:
-            GPIO.output(15,GPIO.HIGH)## Switch off pin 15
         # time.sleep(5)
         timestamp = str(datetime.now())
-        return json.dumps({'umidade': umid, 'temperatura': temp, 'timestamp': timestamp})
+        return jsonify({'umidade': umid, 'temperatura': temp, 'timestamp': timestamp})
     else:
         # Mensagem de erro de comunicacao com o sensor
-        return json.dumps({'Falha ao ler dados do DHT11 !!!'})
+        return jsonify({'Falha ao ler dados do DHT11 !!!'})
